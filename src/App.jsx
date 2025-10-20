@@ -3,6 +3,7 @@ import { GlobalStyles } from "./styles/GlobalStyles";
 import Button from "./ui/Button";
 import Input from "./ui/Input";
 import Heading from "./ui/Heading";
+import Row from "./ui/Row";
 
 const Mystyle = styled.h1`
   font-size: 30px;
@@ -10,7 +11,7 @@ const Mystyle = styled.h1`
 `;
 
 const StyledApp = styled.div`
-  background-color: orangered;
+  /* background-color: orangered; */
   padding: 20px;
 `;
 
@@ -19,14 +20,30 @@ function App() {
     <>
       <GlobalStyles />
       <StyledApp>
-        <Heading as="h1">The Wild Oasis</Heading>
-        <Heading as="h2">Check in and out</Heading>
-        <Button onClick={() => alert("hi")}>Check In</Button>
-        <Button onClick={() => alert("hellow")}>Check Out</Button>
+        <Row>
+          <Row type="horizontal">
+            <Heading as="h1">The Wild Oasis</Heading>
 
-        <Heading as="h3">Form</Heading>
-        <Input placeholder="number of guests" />
-        <Input placeholder="number of guests" />
+            <div>
+              <Heading as="h2">Check in and out</Heading>
+              <Button onClick={() => alert("hi")}>Check In</Button>
+              <Button
+                variations="secondary"
+                sizes="small"
+                onClick={() => alert("hellow")}>
+                Check Out
+              </Button>
+            </div>
+          </Row>
+
+          <Row>
+            <Heading as="h3">Form</Heading>
+            <form>
+              <Input placeholder="number of guests" />
+              <Input placeholder="number of guests" />
+            </form>
+          </Row>
+        </Row>
       </StyledApp>
     </>
   );
