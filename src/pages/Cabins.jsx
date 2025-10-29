@@ -20,10 +20,10 @@ function Cabins() {
     <Row type="horizontal">
       <Heading as="h1">All cabins</Heading>
       <p>TEST</p>
-      <img
+      {/* <img
         src="https://sarzztxidxgnsbagvswl.supabase.co/storage/v1/object/public/cabin-images/cabin-005.jpg"
         alt="cabin"
-      />
+      /> */}
     </Row>
   );
 }
