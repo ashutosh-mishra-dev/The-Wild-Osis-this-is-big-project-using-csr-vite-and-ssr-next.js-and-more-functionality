@@ -38,7 +38,10 @@ function CabinTable() {
     queryFn: getCabins,
   });
 
+  console.log("cabin table error : ", error);
+
   if (isLoading) return <Spinner />;
+
   return (
     <Table role="table">
       <TableHeader role="row">

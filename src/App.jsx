@@ -17,6 +17,7 @@ import AppLayout from "./ui/AppLayout";
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
+      //staleTime: 60 * 1000, // yha ek mintute tak qeury fresh rahega niche 0 h to turant data stale means purana ho jayega
       staleTime: 0,
     },
   },
