@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { formatCurrency } from "../../utils/helpers";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { deleteCabin } from "../../services/apiCabins";
+import toast from "react-hot-toast";
 
 const TableRow = styled.div`
   display: grid;
@@ -61,7 +62,7 @@ function CabinRow({ cabin }) {
   const { isPending: isDeleting, mutate } = useMutation({
     mutationFn: deleteCabin,
     onSuccess: () => {
-      alert("cabin successfully deleted");
+      toast.success("cabin successfully deleted");
 
       // React Query ko batata hai ki "cabins" wala data ab outdated ho gaya hai to dobara refetch karo (latest data le lo).
       queryClient.invalidateQueries({
@@ -69,7 +70,7 @@ function CabinRow({ cabin }) {
       });
     },
 
-    onError: (err) => alert(err.message),
+    onError: (err) => toast.error(err.message),
   });
 
   return (
