@@ -33,7 +33,14 @@ function CreateCabinForm() {
   });
 
   function onSubmit(data) {
-    mutate(data);
+    //image object me pass ho rha h agar data.image.at(0) direct error aayega becouse at() pure array pr kaam karta h
+    // console.log(data.image[0].name);  //solution 1
+
+    // solution 2
+    // const files = Array.from(data.image); // pahle array me conver kar rhe h object ko
+    // const file = files.at(0);
+
+    mutate({ ...data, image: data.image[0] });
   }
 
   function onError(errors) {
@@ -103,8 +110,13 @@ function CreateCabinForm() {
         />
       </FormRow>
 
-      <FormRow label="Cabin photo">
-        <FileInput id="image" accept="image/*" />
+      <FormRow label="Cabin photo" error={errors?.image?.message}>
+        <FileInput
+          id="image"
+          accept="image/*"
+          type="file"
+          {...register("image", { required: "This Field is required." })}
+        />
       </FormRow>
 
       <FormRow>
