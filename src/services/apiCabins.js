@@ -1,6 +1,7 @@
 import supabase from "./supabase";
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 
-// fetch all data from database
+// 1. fetch all data from database
 export async function getCabins() {
   const { data, error } = await supabase.from("cabins").select("*");
 
@@ -12,52 +13,54 @@ export async function getCabins() {
   return data;
 }
 
-// insert new  data in database
-export async function CreateCabin(newCabin) {
-  console.log("check in api :", newCabin.image.name);
+// 2. insert and update data
+export async function createEditCabin(newCabin, id) {
+  const hasImagePath = newCabin.image?.startsWith?.(supabaseUrl);
 
-  // agar kisi image name me / (slash) aa jaye (ex. house/001/2.jpg) to supabase ko / milte hi vo house name se folder bna dega.
-  // to uska solution h replaceAll("/"," ") matlab jha slash / mile vha kuch bhi mat karo
+  // unique image name (avoid folder creation due to '/')
   const imageName = `${Math.random()}-${newCabin.image.name}`.replaceAll(
     "/",
     ""
   );
 
-  // ham ab yha image ka path banayenge supabase database ke table aur jo storage ke andar bucket banaya h vha save karne ke liye
+  // bucket URL + image name
+  const imagePath = hasImagePath
+    ? newCabin.image
+    : `${supabaseUrl}/storage/v1/object/public/cabin-images/${imageName}`;
 
-  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+  // Query Builder (insert or update)
+  let query = supabase.from("cabins");
 
-  const imagePath = `${supabaseUrl}/storage/v1/object/public/cabin-images/${imageName}`;
-  //${supabaseUrl}/storage/v1/object/public/cabin-images/ ye supabase ka bucket ka url hai
+  if (!id) query = query.insert([{ ...newCabin, image: imagePath }]);
+  else query = query.update({ ...newCabin, image: imagePath }).eq("id", id);
 
-  //1. create cabin
-  const { data, error } = await supabase
-    .from("cabins")
-    .insert([{ ...newCabin, image: imagePath }]);
-
+  //  Common Select + Error Handling
+  const { data, error } = await query.select().single();
   if (error) {
-    console.error(error);
-    throw new Error("Cabin could not be inserted");
+    console.error("Supabase error:", error);
+    throw new Error(
+      id ? "Cabin could not be updated" : "Cabin could not be inserted"
+    );
   }
 
-  //2. upload image in supabase storage/cabin-image bucket.
-  const { error: storageError } = await supabase.storage
-    .from("cabin-images")
-    .upload(imageName, newCabin.image);
+  // — Upload Image Only If It’s New
+  if (!hasImagePath) {
+    const { error: storageError } = await supabase.storage
+      .from("cabin-images")
+      .upload(imageName, newCabin.image);
 
-  //3. delete cabin : ab ye yha es liye kiya ja rha h kyuki kisi karan bas image upload nhi hua bucket me to upar jo data insert kra rhe h vo bina image ke data insert ho jayega lekin aisa hona chahiye nhi bina image upload ke to esliye yha phir se delete operation ko perform karenge.
-
-  if (storageError) {
-    await supabase.from("cabins").delete().eq("id", data.id);
-    console.error(storageError);
-    throw new Error(
-      "Cabin image could not be uploaded, and cabin was not created."
-    );
+    if (storageError) {
+      await supabase.from("cabins").delete().eq("id", data.id);
+      console.error("Storage upload failed:", storageError);
+      throw new Error(
+        "Cabin image could not be uploaded, and cabin was not created."
+      );
+    }
   }
   return data;
 }
 
-//delete data in to database via cabin id
+//3. delete data in to database via cabin id
 export async function deleteCabin(id) {
   const { error } = await supabase.from("cabins").delete().eq("id", id);
 
