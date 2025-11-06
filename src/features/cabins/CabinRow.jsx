@@ -49,7 +49,7 @@ const Discount = styled.div`
 function CabinRow({ cabin }) {
   const [showForm, setShowForm] = useState(false);
 
-  // ye ek custom hook h jo react query ke liye banaya gya h
+  //  useDeleteCabin() ek custom hook h jo react query ke liye banaya gya h jiska kam cabin delete karna h
   const { isDeleting, deleteCabin } = useDeleteCabin();
 
   const {
@@ -62,7 +62,9 @@ function CabinRow({ cabin }) {
     description,
   } = cabin;
 
+  //useCreateCabin() ek custom hook h jo react query ke liye banaya gya h jiska kam cabin insert karna h
   const { createCabin: copyCabin, isCreating: isCopying } = useCreateCabin();
+
   function handleDuplicate() {
     copyCabin({
       name: `Copy of ${name}`,
@@ -73,6 +75,7 @@ function CabinRow({ cabin }) {
       description,
     });
   }
+
   return (
     <>
       <TableRow>
@@ -86,12 +89,10 @@ function CabinRow({ cabin }) {
           <span>&mdash;</span>
         )}
         <div>
-          <button onClick={handleDuplicate}>
+          <button onClick={handleDuplicate} disabled={isCopying}>
             <HiSquare2Stack />
           </button>
-          <button
-            onClick={() => setShowForm((show) => !show)}
-            disabled={isCopying}>
+          <button onClick={() => setShowForm((show) => !show)}>
             <HiPencil />
           </button>
           <button onClick={() => deleteCabin(cabinId)} disabled={isDeleting}>

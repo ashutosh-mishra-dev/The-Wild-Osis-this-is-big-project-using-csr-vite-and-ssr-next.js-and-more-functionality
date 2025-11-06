@@ -28,6 +28,7 @@ const TableHeader = styled.header`
 `;
 
 function CabinTable() {
+  //custom hook for getAll cabin data from supabase database using  react query
   const { isLoading, cabins, error } = useCabins();
 
   console.log("cabin table error : ", error);
