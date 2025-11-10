@@ -10,7 +10,7 @@ import Textarea from "../../ui/Textarea";
 import FormRow from "../../ui/FormRow";
 import { useEditCabin } from "./useEditCabin";
 
-function CreateCabinForm({ cabinToEdit = {} }) {
+function CreateCabinForm({ cabinToEdit = {}, onCloseModal }) {
   //custom hook for createCabin eske andar react query ka use kiya gya h
   const { createCabin, isCreating } = useCreateCabin();
 
@@ -34,7 +34,16 @@ function CreateCabinForm({ cabinToEdit = {} }) {
     const image = typeof data.image === "string" ? data.image : data.image[0];
 
     if (isEditSession)
-      editCabin({ newCabinData: { ...data, image: image }, id: editId });
+      editCabin(
+        { newCabinData: { ...data, image: image }, id: editId },
+        {
+          onSuccess: (data) => {
+            console.log(data);
+            reset();
+            onCloseModal?.();
+          },
+        }
+      );
     else
       createCabin(
         { ...data, image: image },
@@ -43,6 +52,7 @@ function CreateCabinForm({ cabinToEdit = {} }) {
             // yah data api me insert ho hane pr vha se retun kiya ja rha h vahi return data h
             console.log(data);
             reset();
+            onCloseModal?.();
           },
         }
       );
@@ -53,7 +63,9 @@ function CreateCabinForm({ cabinToEdit = {} }) {
   }
 
   return (
-    <Form onSubmit={handleSubmit(onSubmit, onError)}>
+    <Form
+      onSubmit={handleSubmit(onSubmit, onError)}
+      typeof={onCloseModal ? "modal" : "regular"}>
       <FormRow label="Cabin Name" error={errors?.name?.message}>
         <Input
           type="text"
@@ -126,7 +138,10 @@ function CreateCabinForm({ cabinToEdit = {} }) {
       </FormRow>
 
       <FormRow>
-        <Button variation="secondary" type="reset">
+        <Button
+          variation="secondary"
+          type="reset"
+          onClick={() => onCloseModal?.()}>
           Cancel
         </Button>
         <Button disabled={isWorking}>
