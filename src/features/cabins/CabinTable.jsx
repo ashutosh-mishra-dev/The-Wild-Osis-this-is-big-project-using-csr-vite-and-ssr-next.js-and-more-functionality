@@ -22,9 +22,11 @@ function CabinTable() {
         <div></div>
       </Table.Header>
 
-      {cabins.map((cabin) => (
-        <CabinRow cabin={cabin} key={cabin.id} />
-      ))}
+      {/* hamne yha compaund component ke sath sath render props pattern ka bhi use kiya (render se props pattern)  */}
+      <Table.Body
+        data={cabins}
+        render={(cabin) => <CabinRow cabin={cabin} key={cabin.id} />}
+      />
     </Table>
   );
 }

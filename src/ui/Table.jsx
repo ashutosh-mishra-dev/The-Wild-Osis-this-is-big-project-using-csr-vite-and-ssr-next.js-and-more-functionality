@@ -91,12 +91,15 @@ function Row({ children }) {
     </StyledRow>
   );
 }
-// function Body({ children }) {}
+function Body({ render, data }) {
+  if (!data.length) return <Empty>No data show at the moment</Empty>;
+  return <StyledBody>{data.map(render)}</StyledBody>;
+}
 
 // add component  parent to child
 Table.Header = Header;
 Table.Row = Row;
 Table.Footer = Footer;
-//Table.Body = Body;
+Table.Body = Body;
 
 export default Table;
