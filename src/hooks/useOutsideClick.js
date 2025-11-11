@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 
-// ---------------- yah ek custom hook hai --------------------
+// ---------------- yah ek custom hook hai jo outside click ko detect karta h  --------------------
 // useOutsideClick(handler, listenerCapturing) : parameter me handler outside function jai ex jaise ki modal se aa rha h close function
 //listenerCapturing : jab ham addEventListener likhate h to usame bub
 export function useOutsideClick(handler, listenerCapturing = true) {
