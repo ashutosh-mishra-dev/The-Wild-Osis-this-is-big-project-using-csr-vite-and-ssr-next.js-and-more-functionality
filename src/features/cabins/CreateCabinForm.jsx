@@ -38,7 +38,7 @@ function CreateCabinForm({ cabinToEdit = {}, onCloseModal }) {
         { newCabinData: { ...data, image: image }, id: editId },
         {
           onSuccess: (data) => {
-            console.log(data);
+            console.log("DATA come after updated data in supabase DB :", data);
             reset();
             onCloseModal?.();
           },
@@ -50,7 +50,7 @@ function CreateCabinForm({ cabinToEdit = {}, onCloseModal }) {
         {
           success: (data) => {
             // yah data api me insert ho hane pr vha se retun kiya ja rha h vahi return data h
-            console.log(data);
+            console.log("DATA come after insert data in supabase DB :", data);
             reset();
             onCloseModal?.();
           },
