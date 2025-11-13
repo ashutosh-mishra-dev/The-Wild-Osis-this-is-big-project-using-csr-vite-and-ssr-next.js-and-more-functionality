@@ -6,17 +6,17 @@ import Menus from "../../ui/Menus";
 import { useSearchParams } from "react-router";
 
 function CabinTable() {
-  const [searchParam] = useSearchParams();
+  const [searchParams] = useSearchParams();
 
   const { isLoading, cabins } = useCabins(); //custom hook for getAll cabin data from supabase database using  react query
 
   if (isLoading) return <Spinner />;
 
-  const filterValue = searchParam.get("discount") || "all";
+  const filterValue = searchParams.get("discount") || "all";
   //console.log(filterValue);
 
+  // 1) FILTER
   let filteredCabins;
-
   if (filterValue === "all") filteredCabins = cabins;
 
   if (filterValue === "no-discount")
@@ -24,6 +24,16 @@ function CabinTable() {
 
   if (filterValue === "with-discount")
     filteredCabins = cabins.filter((cabin) => cabin.discount > 0);
+
+  //2. SORT
+  const sortBy = searchParams.get("sortBy");
+
+  const [field, direction] = sortBy.split("-");
+
+  const modifier = direction === "asc" ? 1 : -1;
+  const sortedCabins = filteredCabins.sort(
+    (a, b) => (a[field] - b[field]) * modifier
+  );
 
   return (
     <Menus>
@@ -40,7 +50,8 @@ function CabinTable() {
         {/* hamne yha compaund component ke sath sath render props pattern ka bhi use kiya (render se props pattern)  */}
         <Table.Body
           //data={cabins}
-          data={filteredCabins}
+          //data={filteredCabins}
+          data={sortedCabins}
           render={(cabin) => <CabinRow cabin={cabin} key={cabin.id} />}
         />
       </Table>
