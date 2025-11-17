@@ -4,6 +4,7 @@ import { useCabins } from "./useCabins";
 import Table from "../../ui/Table";
 import Menus from "../../ui/Menus";
 import { useSearchParams } from "react-router";
+import Empty from "../../ui/Empty";
 
 function CabinTable() {
   const [searchParams] = useSearchParams();
@@ -11,6 +12,7 @@ function CabinTable() {
   const { isLoading, cabins } = useCabins(); //custom hook for getAll cabin data from supabase database using  react query
 
   if (isLoading) return <Spinner />;
+  if (!cabins.length) return <Empty resourceName="Cabins" />;
 
   const filterValue = searchParams.get("discount") || "all";
   //console.log(filterValue);

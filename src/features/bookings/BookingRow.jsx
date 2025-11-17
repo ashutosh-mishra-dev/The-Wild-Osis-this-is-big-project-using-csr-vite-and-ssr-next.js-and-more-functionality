@@ -42,7 +42,7 @@ function BookingRow({
     endDate,
     numNights,
     numGuests,
-    totalPrice,
+    tatalPrice,
     status,
     guests: { fullName: guestName, email },
     cabins: { name: cabinName },
@@ -78,7 +78,7 @@ function BookingRow({
 
       <Tag type={statusToTagName[status]}>{status.replace("-", " ")}</Tag>
 
-      <Amount>{formatCurrency(totalPrice)}</Amount>
+      <Amount>{formatCurrency(tatalPrice)}</Amount>
     </Table.Row>
   );
 }
