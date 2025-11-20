@@ -61,7 +61,7 @@ async function createBookings() {
     const extrasPrice = booking.hasBreakfast
       ? numNights * 15 * booking.numGuests
       : 0; // hardcoded breakfast price
-    const totalPrice = cabinPrice + extrasPrice;
+    const tatalPrice = cabinPrice + extrasPrice;
 
     let status;
     if (
@@ -87,7 +87,7 @@ async function createBookings() {
       numNights,
       cabinPrice,
       extrasPrice,
-      totalPrice,
+      tatalPrice,
       guestId: allGuestIds.at(booking.guestId - 1),
       cabinId: allCabinIds.at(booking.cabinId - 1),
       status,
@@ -136,8 +136,7 @@ function Uploader() {
         display: "flex",
         flexDirection: "column",
         gap: "8px",
-      }}
-    >
+      }}>
       <h3>SAMPLE DATA</h3>
 
       <Button onClick={uploadAll} disabled={isLoading}>
